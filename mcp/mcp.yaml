@@ -5,16 +5,18 @@
 # 取值顺序：OS 环境变量 > env/env.yaml（团队共享，禁放密钥）> ~/.teamai/env（本机 KEY=value，不入 git）。
 # ${VAR} 无法解析时该 server 跳过并提示。
 #
-# ── 来源（2026-08-23，迁移自 ~/.claude/settings.json mcpServers，共 8 个）──
+# ── 来源（2026-08-23，迁移自 ~/.claude/settings.json mcpServers，共 9 个）──
 # 原样迁移（无密钥）：chrome-devtools / fetch / playwright / codegraph / context7
 # 脱敏迁移：tavily（key 占位）、mcp_server_mysql / nacos（内部地址、账号、密码全部占位）
+# 2026-08-23 新增：firecrawl（补齐 skills/tooling/deep-research 的 MCP 依赖断供）
 #
 # ── 成员需在 ~/.teamai/env 配置的变量清单（KEY=value 每行一条，值走内部渠道获取）──
 #   TAVILY_API_KEY=tvly-...       # tavily 个人 API key
+#   FIRECRAWL_API_KEY=fc-...      # firecrawl 个人 API key（deep-research skill 依赖）
 #   MYSQL_HOST=...                # MySQL SIT 内网主机
 #   MYSQL_PORT=3306
 #   MYSQL_USER=...
-#   MYSQL_PASSWORD=...            # 数据库密码，严禁提交仓库
+#   MYSQL_PASSWORD=...            # 数据库密码，严禁提交仓库；账号应为只读（GRANT SELECT），与 nacos 只读实践一致
 #   MYSQL_DATABASE=...
 #   NACOS_HOST=...                # Nacos SIT 内网主机
 #   NACOS_API_PORT=8848
@@ -64,12 +66,21 @@ servers:
     transport: http
     url: https://mcp.tavily.com/mcp/?tavilyApiKey=${TAVILY_API_KEY}
 
-  - name: mcp_server_mysql
-    description: MySQL 数据库连接工具（SIT 连接信息各成员本机 ~/.teamai/env 配置）
+  - name: firecrawl
+    description: 深度网页抓取（JS 渲染 + 结构化提取），deep-research skill 依赖（需本机配置个人 FIRECRAWL_API_KEY）
     transport: stdio
     command: npx
-    args: ['-y', '@benborla29/mcp-server-mysql']
+    args: ['-y', 'firecrawl-mcp']
     requires: [npx]
+    env:
+      FIRECRAWL_API_KEY: "${FIRECRAWL_API_KEY}"
+
+  - name: mcp_server_mysql
+    description: MySQL 数据库连接工具（SIT 连接信息各成员本机 ~/.teamai/env 配置；账号须只读）
+    transport: stdio
+    command: uvx
+    args: ['--from', 'mysql-mcp-server==0.4.4', 'mysql_mcp_server']
+    requires: [uvx]
     env:
       MYSQL_HOST: "${MYSQL_HOST}"
       MYSQL_PORT: "${MYSQL_PORT}"
@@ -81,7 +92,7 @@ servers:
     description: Nacos 配置中心管理工具（SIT 环境；团队默认只读，防误改配置）
     transport: stdio
     command: uvx
-    args: ['jewei-mcp-nacos']
+    args: ['jewei-mcp-nacos==0.1.8']
     requires: [uvx]
     env:
       NACOS_HOST: "${NACOS_HOST}"

@@ -31,7 +31,7 @@ teamai init https://gitee.com/gitciyo/ai-teamai.git --scope user
 ```
 ├── teamai.yaml              # 团队配置（评审人、共享策略、recall 开关）
 ├── culture.md               # 团队文化（注入各工具 CLAUDE.md）
-├── skills/                  # 团队技能（61 个，按命名空间分组，详见 docs/skills-index.md）
+├── skills/                  # 团队技能（61 个，按命名空间分组，详见 docs/team/skills-index.md）
 │   ├── spec/        (2)     #   代码知识梳理：backend-service-spec / cross-tech-stack-spec
 │   ├── uac/        (10)     #   UAC 平台规范（被 rules/java/* 引用）
 │   ├── springboot/  (6)     #   Spring Boot 栈（被 java-reviewer 引用）
@@ -52,15 +52,21 @@ teamai init https://gitee.com/gitciyo/ai-teamai.git --scope user
 │                            #   评审：java / database / security / code / python / typescript-reviewer
 │                            #   流程：planner / architect / tdd-guide / e2e-runner / refactor-cleaner
 │                            #   支持：build-error-resolver / doc-updater / docs-lookup
-├── docs/                    # 团队文档（同步到 sharing.docs.localDir）
-│   ├── onboarding.md        #   新成员指南
-│   ├── harness-guide.md     #   ECC harness 使用指南（哲学/工作流/智能体编排）
-│   ├── skills-index.md      #   全部技能索引（按命名空间）
-│   ├── superpowers-workflow.md      # Superpowers/OpenSpec 工作流选型与路由
-│   ├── uac-skills-analysis.md       # UAC 技能体系评估报告
+├── docs/                    # 团队文档（同步到 sharing.docs.localDir，分类索引见 docs/README.md）
+│   ├── team/                #   团队体系与流程
+│   │   ├── AI 辅助开发架构全景文档.md  # 总体架构（工作流路由 / Superpowers 引擎 / 智能体 / 支撑层）
+│   │   ├── ECC Harness 使用指南.md    # 核心哲学 / 智能体编排 / 强制工作流 / 规则系统
+│   │   ├── superpowers-workflow.md   # Superpowers/OpenSpec 工作流选型与路由
+│   │   └── skills-index.md           # 全部技能索引（按命名空间）
+│   ├── guides/              #   工具使用指南
+│   │   ├── teamai-cli使用说明.md      # 本团队 CLI：安装 / 接入 / 日常命令（原新成员指南）
+│   │   ├── OMP开发者使用说明.md       # OMP 终端 AI 编码代理
+│   │   └── Zed 编辑器完全指南.md      # Zed 编辑器实用手册
+│   └── resources/           #   外部资源精选
+│       └── AI编程武器库.md            # Skills / MCP / 工作流精选清单（2026 版）
 ├── learnings/               # 知识库：会话经验沉淀（带 frontmatter，供 teamai recall 检索）
 ├── hooks/hooks.yaml         # 团队 hooks（3 条：禁 --no-verify / 敏感文件拦截 / Spring 格式化，显式同意后生效）
-├── mcp/mcp.yaml             # 团队 MCP（8 个：浏览器/抓取/文档检索/代码图谱/搜索/MySQL/Nacos，凭据全占位符，显式同意后生效）
+├── mcp/mcp.yaml             # 团队 MCP（9 个：浏览器/抓取/文档检索/代码图谱/搜索/MySQL/Nacos/配置中心，凭据全占位符，显式同意后生效）
 ├── env/env.yaml             # 团队环境变量（禁止放密钥）
 └── members/                 # 成员注册（teamai init 自动写入）
 ```
@@ -86,7 +92,7 @@ teamai doctor                  # 配置诊断
 - **skills/uac/**、**skills/springboot/**：UAC 平台规范与 Spring Boot 栈最佳实践，源自项目实战（gis-lbc-ibs-demo），被 rules/reviewers 直接引用。
 - **skills/engineering/**、**skills/workflow/**、**skills/superpowers/**：通用工程、工作流编排与 Superpowers 基础技能（整理自项目与 ECC 社区内容）。
 - **skills/python/、frontend/、session/、tooling/、dikm/**：语言专项、会话管理、工具平台与跨仓库协同技能（源自项目 .claude，`agent-browser` 已排除 1.8MB 示例图片）。
-- **docs/**：harness 指南、技能索引、superpowers 工作流为总结文档；UAC 技能评估报告原文入库。
+- **docs/**：按三类组织——`team/`（架构全景 / harness 指南 / 工作流路由 / 技能索引）、`guides/`（teamai-cli / OMP / Zed 工具指南）、`resources/`（外部 Skills 与 MCP 精选清单），索引见 `docs/README.md`。
 - CLI 内置 skills（`teamai-share-learnings`、`team-wiki-codebase` 等）由 teamai-cli 自动部署，**不要**手动放进本仓库。
 
 ## 注意事项
