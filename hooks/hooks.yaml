@@ -39,7 +39,7 @@ hooks:
     timeout: 5
     tools: [claude]
     command: >-
-      bash -c 'f=$(grep -oE "\"file_path\"[^,}]*" | head -1); case "$f" in *.env*|*.pem*|*.key*|*.p12*|*.jks*|*.keystore*|*id_rsa*|*id_ed25519*|*application-prod*|*secrets.*) echo "[team hook] blocked: $f is a sensitive file (secret/cert/prod config). Edit it manually." >&2; exit 2;; esac; exit 0'
+      bash -c 'f=$(grep -oE "\"file_path\"[^,}]*" | head -1); case "$f" in *.env*|*.pem\"|*.key\"|*.p12\"|*.jks\"|*.keystore\"|*id_rsa*|*id_ed25519*|*application-prod*|*secrets.*) echo "[team hook] blocked: $f is a sensitive file (secret/cert/prod config). Edit it manually." >&2; exit 2;; esac; exit 0'
 
   # Spring 项目会话结束时自动格式化（仅当 pom.xml 声明了 spring-javaformat 插件）
   - id: spring-javaformat
