@@ -31,20 +31,20 @@ teamai init https://gitee.com/gitciyo/ai-teamai.git --scope user
 ```
 ├── teamai.yaml              # 团队配置（评审人、共享策略、recall 开关）
 ├── culture.md               # 团队文化（注入各工具 CLAUDE.md）
-├── skills/                  # 团队技能（按命名空间分组）
-│   └── spec/                #   代码知识梳理
-│       ├── backend-service-spec-skill/    # 后端服务 codemap / 领域梳理 / 需求事实抽取
-│       └── cross-tech-stack-spec-skill/   # 混合技术栈（移动端/H5/Python）扩展
+├── skills/                  # 团队技能（23 个，按命名空间分组）
+│   ├── spec/        (2)     #   代码知识梳理：backend-service-spec / cross-tech-stack-spec
+│   ├── uac/        (10)     #   UAC 平台规范（被 rules/java/* 引用）：架构 / API / 数据库 / Redis / Kafka / 定时任务 / 安全 / 文件 / Excel / 国际化
+│   ├── springboot/  (6)     #   Spring Boot 栈（被 java-reviewer 引用）：patterns / security / tdd / verification / upgrade-expert / coding-standards
+│   └── engineering/ (5)     #   通用工程（对齐 teamai-hub 模板）：backend-patterns / tdd-workflow / security-review / e2e-testing / coding-standards
 ├── rules/                   # 编码规则（pull 后同步到各工具 rules/）
 │   ├── common/              #   通用：编码风格、测试、安全、性能、智能体编排
 │   ├── java/                #   Java：API 设计、数据库、Redis、Kafka、定时任务、国际化等
 │   ├── python/              #   Python
 │   └── typescript/          #   TypeScript
-├── agents/                  # 评审子代理（pull 后部署到各工具 agents/）
-│   ├── java-reviewer.md
-│   ├── database-reviewer.md
-│   ├── security-reviewer.md
-│   └── code-reviewer.md
+├── agents/                  # 14 个子代理（pull 后部署到各工具 agents/）
+│                            #   评审：java / database / security / code / python / typescript-reviewer
+│                            #   流程：planner / architect / tdd-guide / e2e-runner / refactor-cleaner
+│                            #   支持：build-error-resolver / doc-updater / docs-lookup
 ├── docs/                    # 团队文档（同步到 sharing.docs.localDir）
 │   └── onboarding.md        #   新成员指南
 ├── learnings/               # 知识库：会话经验沉淀（带 frontmatter，供 teamai recall 检索）
@@ -69,8 +69,11 @@ teamai doctor                  # 配置诊断
 
 ## 内容来源
 
-- **rules/**、**agents/**：整理自团队既有工程规范（Java 后端为主），命名空间结构与 [teamai-hub/template-backend](https://github.com/teamai-hub/template-backend) 社区模板一致。
+- **rules/**：整理自团队既有工程规范（Java 后端为主），命名空间结构与 [teamai-hub/template-backend](https://github.com/teamai-hub/template-backend) 社区模板对齐。`java/*` 规则与 `skills/uac/` 配套使用——规则是核心约束，skill 是详细模板与排障指南。
+- **agents/**：14 个生产子代理——评审类（java/database/security/code/python/typescript-reviewer）、流程类（planner/architect/tdd-guide/e2e-runner/refactor-cleaner）、支持类（build-error-resolver/doc-updater/docs-lookup）。
 - **skills/spec/**：团队代码知识梳理方法论（`create_codemap` / `service_deep_dive` / `build_domain_map` 等工作流）。
+- **skills/uac/**、**skills/springboot/**：UAC 平台规范与 Spring Boot 栈最佳实践，源自项目实战（gis-lbc-ibs-demo），被 rules/reviewers 直接引用。
+- **skills/engineering/**：对齐 teamai-hub 社区模板的通用工程内容。
 - CLI 内置 skills（`teamai-share-learnings`、`team-wiki-codebase` 等）由 teamai-cli 自动部署，**不要**手动放进本仓库。
 
 ## 注意事项
