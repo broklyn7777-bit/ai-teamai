@@ -1,6 +1,6 @@
 ---
 company:
-  name: 顺丰科技
+  name: diknow
   values:
     - 务实工程
     - 事实驱动
