@@ -1,0 +1,22 @@
+# 团队 MCP Server 声明 —— teamai pull 时按各工具原生格式写入其 MCP 配置
+# 语法参考：teamai-cli docs/usage-guide.zh-CN.md「MCP Server」
+#
+# 密钥约定：只写 ${VAR} 占位符，禁止明文。取值顺序：环境变量 > env/env.yaml > ~/.teamai/env
+#
+# 示例：
+# servers:
+#   - name: gis-internal-api
+#     description: GIS 内部服务查询
+#     transport: http                # stdio | http | sse
+#     url: https://example.com/mcp
+#     headers:
+#       Authorization: Bearer ${GIS_API_TOKEN}
+#
+#   - name: local-formatter
+#     transport: stdio
+#     command: npx
+#     args: ['-y', '@acme/formatter-mcp']
+#     requires: [npx]                # 依赖缺失时跳过并提示
+#     tools: [claude, cursor]        # 可选；默认所有支持 MCP 的工具
+
+servers: []

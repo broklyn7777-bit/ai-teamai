@@ -1,0 +1,41 @@
+# ─── TeamAI 团队配置（团队仓库根配置）───
+# schema 参考：teamai-cli src/types.ts TeamaiConfigSchema
+# 完整文档：https://github.com/Tencent/teamai-cli （docs/usage-guide.zh-CN.md）
+
+team: ai-teamai
+description: GIS 平台团队 AI 协作资源仓库 —— 团队共享的 skills / rules / agents / docs / 知识库
+repo: https://gitee.com/gitciyo/ai-teamai.git
+
+# teamai-cli 的 MR 提供方目前仅支持 github / tgit / cnb。
+# Gitee 作为 git 存储可正常 clone / pull / 直接推送；
+# 但 `teamai push` 的自动创建 MR 流程会降级失败（改动保留在本地，需人工推送）。
+provider: github
+
+# teamai push 创建 MR 时的默认评审人（git 用户名）
+reviewers:
+  - "01374035"
+
+# 对外团队公开的 skills（供其他团队 `teamai source add` 订阅），按需启用
+# publicSkills:
+#   - backend-service-spec-skill
+#   - cross-tech-stack-spec-skill
+
+sharing:
+  rules:
+    # 强制注入各工具 CLAUDE.md 的规则清单（不带 .md 后缀，如 common/coding-style）
+    enforced: []
+  docs:
+    localDir: ~/.teamai/docs
+  env:
+    injectShellProfile: true
+  hooks:
+    # false：pull 时仅提示团队 hooks，需成员手动 `teamai hooks inject` 确认（显式同意，推荐）
+    autoApply: false
+  mcp:
+    # false：pull 时仅提示团队 MCP，需成员手动 `teamai mcp inject` 确认
+    autoApply: false
+  recall:
+    # 团队知识召回：AI 在任务前自动检索团队知识库（成员可用 teamai recall enable/disable 本地覆盖）
+    enabled: true
+
+# toolPaths 使用 CLI 内置默认值（claude/codex/cursor/codebuddy 等），无需在此声明。

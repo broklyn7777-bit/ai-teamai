@@ -1,0 +1,21 @@
+# 团队 hooks 声明 —— teamai pull 时分发到各成员的 AI 工具
+# 语法参考：teamai-cli docs/usage-guide.zh-CN.md「团队 Hooks 声明」
+#
+# 字段说明：
+#   id       唯一标识（^[a-z0-9-]+$）
+#   event    Claude PascalCase 事件名（PreToolUse / PostToolUse / SessionStart / Stop 等，跨工具通用）
+#   matcher  可选，工具 matcher（如 Bash）
+#   command  hook 命令；建议脚本放 ~/.teamai/team-scripts/ 并配合 sharing.hooks.requireTeamScripts
+#   tools    可选，目标工具列表（默认所有支持 hooks 的工具）
+#
+# 示例（提交前密钥扫描）：
+# hooks:
+#   - id: block-secret
+#     description: Scan for secrets before commit
+#     event: PreToolUse
+#     matcher: Bash
+#     command: 'bash -lc "~/.teamai/team-scripts/scan-secret.sh" || true'
+#     timeout: 15
+#     tools: [claude, cursor]
+
+hooks: []
