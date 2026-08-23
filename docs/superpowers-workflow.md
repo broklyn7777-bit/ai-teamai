@@ -1,6 +1,6 @@
 # Superpowers 工作流指南（总结）
 
-> 本文总结自项目 `docs/superpowers-doc/`（superpowers流程指南 + superpowers-skill-routing）。对应的 12 个基础技能与 5 个工作流技能已入团队仓库 `skills/superpowers/` 与 `skills/workflow/`。
+> 本文总结自项目 `docs/superpowers-doc/`（superpowers流程指南 + superpowers-skill-routing）。对应的 12 个基础技能与 4 个工作流技能已入团队仓库 `skills/superpowers/` 与 `skills/workflow/`。
 
 ## 一、Superpowers 基础技能（12 个，见 skills/superpowers/）
 
@@ -18,7 +18,7 @@
 | systematic-debugging | 系统性 4 步调试 |
 | dispatching-parallel-agents | 独立任务并行调度 |
 
-## 二、五个工作流及选型（见 skills/workflow/）
+## 二、四个工作流及选型（见 skills/workflow/）
 
 | 场景 | 推荐工作流 | 特点 |
 |------|-----------|------|
@@ -26,7 +26,6 @@
 | 需要严格规格追踪（合规/审计） | `superpowers-openspec-execution-workflow` | 9 步三明治式：探索 → OpenSpec 固化 → 实现验证 → 归档 |
 | 独立功能、快速迭代 | `superpowers-feature-workflow` | 7 步，不生成 OpenSpec 产物，轻量 |
 | 仅需求定义/规格固化（不写代码） | `openspec-feature-workflow` | 5 步纯 OpenSpec CLI |
-| 重要工作完成后 | `superpowers-learning-workflow` | 5 步纯知识沉淀，接在任何功能工作流之后 |
 
 ### 典型步骤（以 openspec-superpowers 为例）
 

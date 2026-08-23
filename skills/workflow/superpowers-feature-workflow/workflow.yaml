@@ -23,4 +23,3 @@ runtime_requirements: []
 outputs:
   - docs/superpowers/specs/
   - docs/superpowers/plans/
-  - .superpowers-memory/

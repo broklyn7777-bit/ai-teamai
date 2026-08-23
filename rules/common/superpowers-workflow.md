@@ -34,7 +34,6 @@
 | 需严格规格追踪（合规/审计）   | `superpowers-openspec-execution` | 三段式+归档，完整生命周期       |
 | 独立功能、快速迭代        | `superpowers-feature`            | 无 OpenSpec 产物，轻量    |
 | 仅做需求定义和规格固化      | `openspec-feature`               | 纯 OpenSpec CLI，不写代码 |
-| 重要工作完成后          | `superpowers-learning`           | 沉淀项目记忆和可复用经验        |
 
 ### 1. openspec-superpowers（8步，完整功能交付）
 
@@ -86,29 +85,3 @@
 
 **特点**：零 Superpowers 技能调用，纯 OpenSpec CLI 驱动，不包含设计文档、TDD 或验证。
 
-### 5. superpowers-learning（5步，记忆沉淀）
-
-| 步骤 | 说明 |
-|------|------|
-| 步骤 1 | 回顾最近的开发工作、决策和验证结果 |
-| 步骤 2 | 分类：持久化事实 / 当前状态 / 会话产出 / 可复用经验 |
-| 步骤 3 | 更新 `.superpowers-memory/PROJECT_CONTEXT.md`、`CURRENT_STATE.md`、`session-journal/` |
-| 步骤 4 | 追加可复用模式到 `.superpowers-memory/LEARNING_BACKLOG.md` |
-| 步骤 5 | 总结下次会话需要记住的内容 |
-
-## Superpowers 记忆
-
-如果仓库中存在 `.superpowers-memory/` 目录，请在每次会话开始时、询问项目背景之前先读取以下文件：
-
-1. `.superpowers-memory/PROJECT_CONTEXT.md`
-2. `.superpowers-memory/CURRENT_STATE.md`
-3. `.superpowers-memory/session-journal/` 下最新的文件
-
-使用它们来恢复项目上下文、最近的决策、进行中的工作以及可能的下一步。
-
-在结束一次有意义的 Superpowers 相关会话之前，请更新：
-
-- `.superpowers-memory/CURRENT_STATE.md`
-- `.superpowers-memory/session-journal/` 下的一篇简短 markdown 笔记
-
-不要将记忆文件视为自动启用 Superpowers 工作流的许可。工作流的激活仍需明确的主动选择。

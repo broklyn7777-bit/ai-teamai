@@ -47,14 +47,13 @@
 | `security-scan` | 使用AgentShield扫描您的Claude代码配置（.claude/目录），以发现安全漏洞、配置错误和注入风险。检查CLAUDE.md、setting... |
 | `tdd-workflow` | 在编写新功能、修复错误或重构代码时使用此技能。强制执行测试驱动开发，确保单元测试、集成测试和端到端测试的覆盖率超过80%。 |
 
-## workflow — 开发工作流编排（6）
+## workflow — 开发工作流编排（5）
 
 | 技能 | 说明 |
 |------|------|
 | `openspec-feature-workflow` | Use when a feature needs an OpenSpec change with proposal, design, specs, and... |
 | `openspec-superpowers-workflow` | Use when the user explicitly wants the full OpenSpec plus Superpowers path fr... |
 | `superpowers-feature-workflow` | Use when feature work needs the Superpowers stages before or during implement... |
-| `superpowers-learning-workflow` | Use when the user explicitly wants to capture lessons from completed work, pe... |
 | `superpowers-openspec-execution-workflow` | Use when a feature should follow four explicit steps: Superpowers exploration... |
 | `verification-loop` | Claude Code 会话的全面验证系统。 |
 

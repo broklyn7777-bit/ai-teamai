@@ -60,7 +60,7 @@ teamai init https://gitee.com/gitciyo/ai-teamai.git --scope user
 │   ├── uac-skills-analysis.md       # UAC 技能体系评估报告
 ├── learnings/               # 知识库：会话经验沉淀（带 frontmatter，供 teamai recall 检索）
 ├── hooks/hooks.yaml         # 团队 hooks（3 条：禁 --no-verify / 敏感文件拦截 / Spring 格式化，显式同意后生效）
-├── mcp/mcp.yaml             # 团队 MCP Server 声明（默认空）
+├── mcp/mcp.yaml             # 团队 MCP（8 个：浏览器/抓取/文档检索/代码图谱/搜索/MySQL/Nacos，凭据全占位符，显式同意后生效）
 ├── env/env.yaml             # 团队环境变量（禁止放密钥）
 └── members/                 # 成员注册（teamai init 自动写入）
 ```

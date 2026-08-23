@@ -1,22 +1,95 @@
-# 团队 MCP Server 声明 —— teamai pull 时按各工具原生格式写入其 MCP 配置
-# 语法参考：teamai-cli docs/usage-guide.zh-CN.md「MCP Server」
+# 团队 MCP Server 声明 —— teamai pull 时分发，成员确认后 `teamai mcp inject` 生效
+# 语法参考：teamai-cli docs/usage-guide.zh-CN.md「团队 MCP Server」
 #
-# 密钥约定：只写 ${VAR} 占位符，禁止明文。取值顺序：环境变量 > env/env.yaml > ~/.teamai/env
+# 【密钥约定】本文件提交 git：禁止明文密钥/密码/内部地址，一律 ${VAR} 占位。
+# 取值顺序：OS 环境变量 > env/env.yaml（团队共享，禁放密钥）> ~/.teamai/env（本机 KEY=value，不入 git）。
+# ${VAR} 无法解析时该 server 跳过并提示。
 #
-# 示例：
-# servers:
-#   - name: gis-internal-api
-#     description: GIS 内部服务查询
-#     transport: http                # stdio | http | sse
-#     url: https://example.com/mcp
-#     headers:
-#       Authorization: Bearer ${GIS_API_TOKEN}
+# ── 来源（2026-08-23，迁移自 ~/.claude/settings.json mcpServers，共 8 个）──
+# 原样迁移（无密钥）：chrome-devtools / fetch / playwright / codegraph / context7
+# 脱敏迁移：tavily（key 占位）、mcp_server_mysql / nacos（内部地址、账号、密码全部占位）
 #
-#   - name: local-formatter
-#     transport: stdio
-#     command: npx
-#     args: ['-y', '@acme/formatter-mcp']
-#     requires: [npx]                # 依赖缺失时跳过并提示
-#     tools: [claude, cursor]        # 可选；默认所有支持 MCP 的工具
+# ── 成员需在 ~/.teamai/env 配置的变量清单（KEY=value 每行一条，值走内部渠道获取）──
+#   TAVILY_API_KEY=tvly-...       # tavily 个人 API key
+#   MYSQL_HOST=...                # MySQL SIT 内网主机
+#   MYSQL_PORT=3306
+#   MYSQL_USER=...
+#   MYSQL_PASSWORD=...            # 数据库密码，严禁提交仓库
+#   MYSQL_DATABASE=...
+#   NACOS_HOST=...                # Nacos SIT 内网主机
+#   NACOS_API_PORT=8848
+#   NACOS_CONSOLE_PORT=8080
+#   NACOS_USERNAME=...
+#   NACOS_PASSWORD=...
+#   NACOS_NAMESPACE=...
 
-servers: []
+servers:
+  - name: chrome-devtools
+    description: Chrome DevTools 协议接口，无头模式网页性能分析与调试
+    transport: stdio
+    command: npx
+    args: ['-y', 'chrome-devtools-mcp@latest', '--headless']
+    requires: [npx]
+
+  - name: fetch
+    description: 通用网页内容抓取工具，作为 Context7 的兜底方案
+    transport: stdio
+    command: npx
+    args: ['-y', 'mcp-server-fetch@latest']
+    requires: [npx]
+
+  - name: playwright
+    description: Playwright 浏览器自动化，处理需要交互的动态网页和复杂 SPA
+    transport: stdio
+    command: npx
+    args: ['-y', '@playwright/mcp@latest', '--browser=chromium', '--visible']
+    requires: [npx]
+
+  - name: codegraph
+    description: 代码图谱工具，分析代码结构与依赖（仅已建 .codegraph 索引的仓库可用）
+    transport: stdio
+    command: codegraph
+    args: ['serve', '--mcp']
+    requires: [codegraph]
+
+  - name: context7
+    description: 查询最新库 API 文档的 MCP 服务器
+    transport: stdio
+    command: npx
+    args: ['-y', '@upstash/context7-mcp@latest']
+    requires: [npx]
+
+  - name: tavily
+    description: 为 AI 优化的实时搜索引擎（需本机配置个人 TAVILY_API_KEY）
+    transport: http
+    url: https://mcp.tavily.com/mcp/?tavilyApiKey=${TAVILY_API_KEY}
+
+  - name: mcp_server_mysql
+    description: MySQL 数据库连接工具（SIT 连接信息各成员本机 ~/.teamai/env 配置）
+    transport: stdio
+    command: npx
+    args: ['-y', '@benborla29/mcp-server-mysql']
+    requires: [npx]
+    env:
+      MYSQL_HOST: "${MYSQL_HOST}"
+      MYSQL_PORT: "${MYSQL_PORT}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+
+  - name: nacos
+    description: Nacos 配置中心管理工具（SIT 环境；团队默认只读，防误改配置）
+    transport: stdio
+    command: uvx
+    args: ['jewei-mcp-nacos']
+    requires: [uvx]
+    env:
+      NACOS_HOST: "${NACOS_HOST}"
+      NACOS_API_PORT: "${NACOS_API_PORT}"
+      NACOS_CONSOLE_PORT: "${NACOS_CONSOLE_PORT}"
+      NACOS_USERNAME: "${NACOS_USERNAME}"
+      NACOS_PASSWORD: "${NACOS_PASSWORD}"
+      NACOS_NAMESPACE: "${NACOS_NAMESPACE}"
+      NACOS_VERSION: "2"
+      # 团队默认只读；确需修改配置时在本人 ~/.teamai/env 设 NACOS_READ_ONLY=false
+      NACOS_READ_ONLY: "true"
