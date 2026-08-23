@@ -31,11 +31,18 @@ teamai init https://gitee.com/gitciyo/ai-teamai.git --scope user
 ```
 ├── teamai.yaml              # 团队配置（评审人、共享策略、recall 开关）
 ├── culture.md               # 团队文化（注入各工具 CLAUDE.md）
-├── skills/                  # 团队技能（23 个，按命名空间分组）
+├── skills/                  # 团队技能（61 个，按命名空间分组，详见 docs/skills-index.md）
 │   ├── spec/        (2)     #   代码知识梳理：backend-service-spec / cross-tech-stack-spec
-│   ├── uac/        (10)     #   UAC 平台规范（被 rules/java/* 引用）：架构 / API / 数据库 / Redis / Kafka / 定时任务 / 安全 / 文件 / Excel / 国际化
-│   ├── springboot/  (6)     #   Spring Boot 栈（被 java-reviewer 引用）：patterns / security / tdd / verification / upgrade-expert / coding-standards
-│   └── engineering/ (5)     #   通用工程（对齐 teamai-hub 模板）：backend-patterns / tdd-workflow / security-review / e2e-testing / coding-standards
+│   ├── uac/        (10)     #   UAC 平台规范（被 rules/java/* 引用）
+│   ├── springboot/  (6)     #   Spring Boot 栈（被 java-reviewer 引用）
+│   ├── engineering/ (7)     #   通用工程 + 安全扫描 + 编写期质量
+│   ├── workflow/    (6)     #   superpowers/openspec 工作流编排 + 验证闭环
+│   ├── superpowers/(12)     #   Superpowers 基础技能（工作流技能的依赖）
+│   ├── python/      (2)     #   Python 模式与测试
+│   ├── frontend/    (3)     #   前端模式 / 演示文稿 / 浏览器 QA
+│   ├── session/     (5)     #   会话管理：上下文预算 / 压缩 / 评估 / 学习
+│   ├── tooling/     (6)     #   浏览器自动化 / 研究 / 写作 / PRD / 提示词优化
+│   └── dikm/        (2)     #   DIKM 跨仓库同步与项目复刻
 ├── rules/                   # 编码规则（pull 后同步到各工具 rules/）
 │   ├── common/              #   通用：编码风格、测试、安全、性能、智能体编排
 │   ├── java/                #   Java：API 设计、数据库、Redis、Kafka、定时任务、国际化等
@@ -46,7 +53,12 @@ teamai init https://gitee.com/gitciyo/ai-teamai.git --scope user
 │                            #   流程：planner / architect / tdd-guide / e2e-runner / refactor-cleaner
 │                            #   支持：build-error-resolver / doc-updater / docs-lookup
 ├── docs/                    # 团队文档（同步到 sharing.docs.localDir）
-│   └── onboarding.md        #   新成员指南
+│   ├── onboarding.md        #   新成员指南
+│   ├── harness-guide.md     #   ECC harness 使用指南（哲学/工作流/智能体编排）
+│   ├── skills-index.md      #   全部技能索引（按命名空间）
+│   ├── superpowers-workflow.md      # Superpowers/OpenSpec 工作流选型与路由
+│   ├── uac-skills-analysis.md       # UAC 技能体系评估报告
+│   └── spring-boot3-migration-tasks.md  # Spring Boot 3 迁移任务清单
 ├── learnings/               # 知识库：会话经验沉淀（带 frontmatter，供 teamai recall 检索）
 ├── hooks/hooks.yaml         # 团队 hooks 声明（默认空，显式同意后生效）
 ├── mcp/mcp.yaml             # 团队 MCP Server 声明（默认空）
@@ -73,7 +85,9 @@ teamai doctor                  # 配置诊断
 - **agents/**：14 个生产子代理——评审类（java/database/security/code/python/typescript-reviewer）、流程类（planner/architect/tdd-guide/e2e-runner/refactor-cleaner）、支持类（build-error-resolver/doc-updater/docs-lookup）。
 - **skills/spec/**：团队代码知识梳理方法论（`create_codemap` / `service_deep_dive` / `build_domain_map` 等工作流）。
 - **skills/uac/**、**skills/springboot/**：UAC 平台规范与 Spring Boot 栈最佳实践，源自项目实战（gis-lbc-ibs-demo），被 rules/reviewers 直接引用。
-- **skills/engineering/**：对齐 teamai-hub 社区模板的通用工程内容。
+- **skills/engineering/**、**skills/workflow/**、**skills/superpowers/**：通用工程、工作流编排与 Superpowers 基础技能（整理自项目与 ECC 社区内容）。
+- **skills/python/、frontend/、session/、tooling/、dikm/**：语言专项、会话管理、工具平台与跨仓库协同技能（源自项目 .claude，`agent-browser` 已排除 1.8MB 示例图片）。
+- **docs/**：harness 指南、技能索引、superpowers 工作流为总结文档；UAC 评估报告与 Spring Boot 3 迁移清单原文入库。
 - CLI 内置 skills（`teamai-share-learnings`、`team-wiki-codebase` 等）由 teamai-cli 自动部署，**不要**手动放进本仓库。
 
 ## 注意事项
