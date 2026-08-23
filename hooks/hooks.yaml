@@ -1,21 +1,51 @@
-# 团队 hooks 声明 —— teamai pull 时分发到各成员的 AI 工具
+# 团队 hooks 声明 —— teamai pull 时分发，成员确认后 `teamai hooks inject` 生效
 # 语法参考：teamai-cli docs/usage-guide.zh-CN.md「团队 Hooks 声明」
 #
-# 字段说明：
-#   id       唯一标识（^[a-z0-9-]+$）
-#   event    Claude PascalCase 事件名（PreToolUse / PostToolUse / SessionStart / Stop 等，跨工具通用）
-#   matcher  可选，工具 matcher（如 Bash）
-#   command  hook 命令；建议脚本放 ~/.teamai/team-scripts/ 并配合 sharing.hooks.requireTeamScripts
-#   tools    可选，目标工具列表（默认所有支持 hooks 的工具）
+# 字段：id（^[a-z0-9-]+$）/ description / event（Claude PascalCase）/
+#       matcher（可选）/ command / timeout（秒，可选）/ tools（可选，默认全部支持工具）
 #
-# 示例（提交前密钥扫描）：
-# hooks:
-#   - id: block-secret
-#     description: Scan for secrets before commit
-#     event: PreToolUse
-#     matcher: Bash
-#     command: 'bash -lc "~/.teamai/team-scripts/scan-secret.sh" || true'
-#     timeout: 15
-#     tools: [claude, cursor]
+# ── 来源评估（2026-08-23，源：gis-lbc-ibs-demo/.claude/hooks/hooks.json 32 个 hooks）──
+# ✅ 已转换（自包含、零外部依赖）：
+#   1. block-no-verify    ← PreToolUse npx block-no-verify（去 npx 网络依赖，改内联实现）
+#   2. protect-sensitive  ← PreToolUse config-protection（原插件脚本不可迁移，按同等意图重写）
+#   3. spring-javaformat  ← Stop mvn spring-javaformat:apply（原样自包含，增强插件存在性检查）
+# ❌ 不转换（27 个）：
+#   - 24 个依赖 ECC 插件脚本体系（run-with-flags.js + flag 配置），脚本不随团队仓库分发
+#   - 与 teamai 内置能力重叠：session-start-bootstrap（内置 SessionStart pull）、
+#     evaluate-session / cost-tracker / session-end（内置 Stop 摩擦评分与用量跟踪）
+#   - 个人环境依赖：tmux x2、desktop-notify；弱团队价值：doc-file-warning、
+#     mcp-health-check、suggest-compact、governance-capture、observe 等
+#
+# ── 二期候选（需先建立 ~/.teamai/team-scripts/ 分发约定）──
+#   - commit 前密钥扫描（teamai 官方示例 block-secret 模式）
+#   - Stop 时调试残留检查（console.log / print）
 
-hooks: []
+hooks:
+  # 禁止 AI 用 --no-verify 绕过 git hooks（PreToolUse 退出码 2 = 拦截工具调用）
+  - id: block-no-verify
+    description: 拦截 git commit/push 中的 --no-verify，禁止绕过 git hooks
+    event: PreToolUse
+    matcher: Bash
+    timeout: 5
+    tools: [claude]
+    command: >-
+      bash -c 'grep -q -- "--no-verify" && { echo "[team hook] blocked: --no-verify bypasses git hooks. Fix the hook issue and commit normally." >&2; exit 2; }; exit 0'
+
+  # 拦截 AI 直接写敏感文件（密钥/证书/生产配置）
+  - id: protect-sensitive-files
+    description: 拦截 AI 直接写入 .env/密钥/证书/生产配置等敏感文件
+    event: PreToolUse
+    matcher: Write|Edit|MultiEdit
+    timeout: 5
+    tools: [claude]
+    command: >-
+      bash -c 'f=$(grep -oE "\"file_path\"[^,}]*" | head -1); case "$f" in *.env*|*.pem*|*.key*|*.p12*|*.jks*|*.keystore*|*id_rsa*|*id_ed25519*|*application-prod*|*secrets.*) echo "[team hook] blocked: $f is a sensitive file (secret/cert/prod config). Edit it manually." >&2; exit 2;; esac; exit 0'
+
+  # Spring 项目会话结束时自动格式化（仅当 pom.xml 声明了 spring-javaformat 插件）
+  - id: spring-javaformat
+    description: 会话结束时对 Spring 项目自动执行 spring-javaformat 格式化
+    event: Stop
+    timeout: 120
+    tools: [claude]
+    command: >-
+      bash -c 'if [ -f pom.xml ] && grep -q spring-javaformat pom.xml; then mvn spring-javaformat:apply -q || true; fi'
