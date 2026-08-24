@@ -9,7 +9,12 @@ npm install -g teamai-cli        # Node.js ≥ 18（官方 usage-guide 要求）
 teamai --version
 
 # 用户级初始化（推荐，跨项目共享）
-teamai init https://gitee.com/gitciyo/ai-teamai.git --scope user
+teamai init https://github.com/broklyn7777-bit/ai-teamai.git --scope user --agent claude
+
+# gitee 目前不支持 
+git remote set-url origin https://gitee.com/gitciyo/ai-teamai.git
+cd /path/to/ai-teamai
+teamai init . --scope user --agent claude
 
 # 项目级（只装到当前项目）
 cd /path/to/project
