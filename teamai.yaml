@@ -30,7 +30,7 @@ sharing:
     injectShellProfile: true
   hooks:
     # false：pull 时仅提示团队 hooks，需成员手动 `teamai hooks inject` 确认（显式同意，推荐）
-    autoApply: true
+    autoApply: false
   mcp:
     # false：pull 时仅提示团队 MCP，需成员手动 `teamai mcp inject` 确认
     autoApply: true
