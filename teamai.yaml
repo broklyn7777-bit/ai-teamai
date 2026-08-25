@@ -30,10 +30,10 @@ sharing:
     injectShellProfile: true
   hooks:
     # false：pull 时仅提示团队 hooks，需成员手动 `teamai hooks inject` 确认（显式同意，推荐）
-    autoApply: false
+    autoApply: true
   mcp:
     # false：pull 时仅提示团队 MCP，需成员手动 `teamai mcp inject` 确认
-    autoApply: false
+    autoApply: true
   recall:
     # 团队知识召回：AI 在任务前自动检索团队知识库（成员可用 teamai recall enable/disable 本地覆盖）
     enabled: true
